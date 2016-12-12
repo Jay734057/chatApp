@@ -50,7 +50,8 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
                 self.messages.append(Message(dictionary: dic))
                 DispatchQueue.main.async(execute: {
                     self.collectionView?.reloadData()
-                    if self.messages.count - 1 > 0 {
+//                    it will crash!!!i dont know 
+                    if self.messages.count > 0 {
                         let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
                         self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
                     }
@@ -152,7 +153,7 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
         let filename = NSUUID().uuidString +  ".mov"
         let uploadTask = FIRStorage.storage().reference().child("message_video").child(filename).putFile(url, metadata: nil, completion: { (metadata, error) in
             if error != nil{
-                print(error)
+                print(error!)
                 return
             }
             

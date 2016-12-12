@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  twitter_old
+//  Real-timeChat
 //
 //  Created by Jay on 03/12/2016.
 //  Copyright © 2016 Jay. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  twitter_old
+//  Real-timeChat
 //
 //  Created by Jay on 03/12/2016.
 //  Copyright © 2016 Jay. All rights reserved.
@@ -35,8 +35,36 @@ class MessageController: UITableViewController {
         
         //        observerMessages()
         
-        observerUserMessages()
+//        observerUserMessages()??????????
+        tableView.allowsMultipleSelectionDuringEditing = true
         
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        //delete messages
+        
+        guard let uid = FIRAuth.auth()?.currentUser?.uid else {
+            return
+        }
+        
+        let message = messages[indexPath.row]
+        
+        if let id = message.chatmateId() {
+            FIRDatabase.database().reference().child("user-messages").child(uid).child(id).removeValue(completionBlock: { (error, ref) in
+                if error != nil {
+                    print(error!)
+                    return
+                }
+                
+                self.messagesDic.removeValue(forKey: id)
+                self.attemptReloadOfTable()
+                
+            })
+        }
     }
     
     func observerUserMessages() {
@@ -77,6 +105,11 @@ class MessageController: UITableViewController {
                 
             }, withCancel: nil)
             
+        }, withCancel: nil)
+        
+        ref.observe(.childRemoved, with: {(snapshot) in
+            self.messagesDic.removeValue(forKey: snapshot.key)
+            self.attemptReloadOfTable()
         }, withCancel: nil)
     }
     
