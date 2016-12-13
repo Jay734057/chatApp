@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     
     var messageController: MessageController?
     
@@ -254,6 +254,8 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         setupLoginRegisterButton()
         setupProfileImageView()
         setupLoginSegmentedControl()
+        
+        passwordTextField.delegate = self
     }
     
     func setupLoginSegmentedControl(){
@@ -330,7 +332,10 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         return .lightContent
     }
     
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        handleLoginRegister()
+        return true
+    }
     
 }
 
