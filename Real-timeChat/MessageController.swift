@@ -32,10 +32,7 @@ class MessageController: UITableViewController {
         checkIfLoggedIn()
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
-        
-        //        observerMessages()
-        
-//        observerUserMessages()??????????
+     
         tableView.allowsMultipleSelectionDuringEditing = true
         
     }
@@ -75,7 +72,6 @@ class MessageController: UITableViewController {
         let ref = FIRDatabase.database().reference().child("user-messages").child(uid)
         ref.observe(.childAdded, with: {
             (snapshot) in
-            //            print(snapshot)
             let userId = snapshot.key
             FIRDatabase.database().reference().child("user-messages").child(uid).child(userId).observe(.childAdded, with: { (snapshot) in
                 
@@ -87,10 +83,7 @@ class MessageController: UITableViewController {
                     
                     if let dic = snapshot.value as? [String: AnyObject]{
                         let message = Message(dictionary: dic)
-                        //                        message.setValuesForKeys(dic)
                         
-                        //                self.messages.append(message)
-                        //only one message for each id
                         if let id = message.chatmateId() {
                             self.messagesDic[id] = message
                             
@@ -99,7 +92,6 @@ class MessageController: UITableViewController {
                         self.attemptReloadOfTable()
                         
                     }
-                    print(snapshot)
                     
                 }, withCancel: nil)
                 
@@ -131,33 +123,15 @@ class MessageController: UITableViewController {
         })
     }
     
-    
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellId")
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
-        
-        
+
         let message = messages[indexPath.row]
-        
-        //        if let id = message.toId{
-        //            let ref = FIRDatabase.database().reference().child("users").child(id)
-        //            ref.observeSingleEvent(of: .value, with: {
-        //                (snapshot) in
-        //                if let dic = snapshot.value as? [String: AnyObject]{
-        //                    cell.textLabel?.text = dic["name"] as? String
-        //                    cell.detailTextLabel?.text = message.text
-        //
-        //                    if let profileImageURL = dic["profileImageURL"]{
-        //                        cell.profileImageView.loadImageUsingCacheWithURLString(urlString: profileImageURL as! String)
-        //                    }
-        //                }
-        //            }, withCancel: nil)
-        //        }
+      
         cell.message = message
         
         return cell
@@ -187,7 +161,6 @@ class MessageController: UITableViewController {
             self.showChatController(user: user)
         }, withCancel: nil)
         
-        //        showChatController(user: <#T##User#>)
     }
     
     func handleFetchUserList() {
@@ -209,7 +182,6 @@ class MessageController: UITableViewController {
         guard let uid = FIRAuth.auth()?.currentUser?.uid else {
             return
         }
-        
         FIRDatabase.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
             if let dic = snapshot.value as? [String: AnyObject] {
                 self.navigationItem.title = dic["name"] as? String
@@ -222,8 +194,6 @@ class MessageController: UITableViewController {
                 
             }
         }, withCancel: nil)
-        
-        
         
     }
     

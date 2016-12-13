@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		008DC460BDD802DF0C93D5E5 /* Pods_Real_timeChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A7868603E7B2AF980B3B53 /* Pods_Real_timeChat.framework */; };
 		41B4BB805875184275CBEBC8 /* Pods_Real_timeChatUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35059BBC8AA74A324F575E23 /* Pods_Real_timeChatUITests.framework */; };
+		693A11961DFF6B0700918299 /* ChatInputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693A11951DFF6B0700918299 /* ChatInputContainerView.swift */; };
 		69A618651DFE104000088CC0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A618641DFE104000088CC0 /* AppDelegate.swift */; };
 		69A618671DFE104000088CC0 /* MessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A618661DFE104000088CC0 /* MessageController.swift */; };
 		69A6186A1DFE104000088CC0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 69A618681DFE104000088CC0 /* Main.storyboard */; };
@@ -49,6 +50,8 @@
 		150C73CCB4C92737AD106478 /* Pods-Real-timeChatUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Real-timeChatUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Real-timeChatUITests/Pods-Real-timeChatUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		35059BBC8AA74A324F575E23 /* Pods_Real_timeChatUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Real_timeChatUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		37A7868603E7B2AF980B3B53 /* Pods_Real_timeChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Real_timeChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		693A11951DFF6B0700918299 /* ChatInputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatInputContainerView.swift; sourceTree = "<group>"; };
+		693A11971DFF759400918299 /* Real-timeChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Real-timeChat.entitlements"; sourceTree = "<group>"; };
 		69A618611DFE104000088CC0 /* Real-timeChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Real-timeChat.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		69A618641DFE104000088CC0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		69A618661DFE104000088CC0 /* MessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageController.swift; sourceTree = "<group>"; };
@@ -132,6 +135,7 @@
 		69A618631DFE104000088CC0 /* Real-timeChat */ = {
 			isa = PBXGroup;
 			children = (
+				693A11971DFF759400918299 /* Real-timeChat.entitlements */,
 				69A618A31DFE15B700088CC0 /* plist */,
 				69A618A21DFE159200088CC0 /* Storyboard */,
 				69A618971DFE140C00088CC0 /* Helpers */,
@@ -167,6 +171,7 @@
 			children = (
 				69A6189C1DFE152400088CC0 /* UserCell.swift */,
 				69A6189E1DFE156000088CC0 /* ChatMessageCell.swift */,
+				693A11951DFF6B0700918299 /* ChatInputContainerView.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -185,8 +190,8 @@
 		69A618961DFE13F900088CC0 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				69A618981DFE142F00088CC0 /* Message.swift */,
 				69A6189A1DFE147700088CC0 /* User.swift */,
+				69A618981DFE142F00088CC0 /* Message.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -319,6 +324,11 @@
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = L8TP25NHU4;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 					69A618741DFE104000088CC0 = {
 						CreatedOnToolsVersion = 8.1;
@@ -532,6 +542,7 @@
 				69A6189F1DFE156000088CC0 /* ChatMessageCell.swift in Sources */,
 				69A618A51DFE160000088CC0 /* LoginController.swift in Sources */,
 				69A6189D1DFE152400088CC0 /* UserCell.swift in Sources */,
+				693A11961DFF6B0700918299 /* ChatInputContainerView.swift in Sources */,
 				69A618651DFE104000088CC0 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -685,6 +696,7 @@
 			baseConfigurationReference = 776F4BA51C18A92D373C4D4A /* Pods-Real-timeChat.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Real-timeChat/Real-timeChat.entitlements";
 				DEVELOPMENT_TEAM = L8TP25NHU4;
 				INFOPLIST_FILE = "Real-timeChat/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -700,6 +712,7 @@
 			baseConfigurationReference = AC14E5B129EEBE617238E4B2 /* Pods-Real-timeChat.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Real-timeChat/Real-timeChat.entitlements";
 				DEVELOPMENT_TEAM = L8TP25NHU4;
 				INFOPLIST_FILE = "Real-timeChat/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;

@@ -14,7 +14,6 @@ extension UIColor{
     }
 }
 
-
 let imageCache = NSCache<NSString, UIImage>()
 
 extension UIImageView {

@@ -21,14 +21,6 @@ class Message: NSObject {
     
     var videoURL: String?
     
-    func chatmateId() -> String? {
-        if fromId == FIRAuth.auth()?.currentUser?.uid {
-            return toId
-        }else {
-            return fromId
-        }
-    }
-    
     init(dictionary: [String: AnyObject]) {
         super.init()
         
@@ -42,5 +34,13 @@ class Message: NSObject {
         imageHeight = dictionary["imageHeight"] as? NSNumber
         
         videoURL = dictionary["videoURL"] as? String
+    }
+    
+    func chatmateId() -> String? {
+        if fromId == FIRAuth.auth()?.currentUser?.uid {
+            return toId
+        }else {
+            return fromId
+        }
     }
 }

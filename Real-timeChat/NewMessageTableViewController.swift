@@ -67,25 +67,8 @@ class NewMessageTableViewController: UITableViewController {
         cell?.textLabel?.text = user.name
         cell?.detailTextLabel?.text = user.email
         
-        //        cell.imageView?.image = UIImage(named: "gameofthrones_splash")
-        //        cell.contentMode = .scaleAspectFill
-        //        cell.imageView?.backgroundColor = UIColor.blue
-        
         if let profileImageURL = user.profileImageURL {
             cell?.profileImageView.loadImageUsingCacheWithURLString(urlString: profileImageURL)
-            //            let url = URL(string: profileImageURL)
-            ////            print(profileImageURL)
-            //            URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
-            //                if error != nil {
-            //                    print(error!)
-            //                    return
-            //                }
-            //
-            //                DispatchQueue.main.async(execute: {
-            //                    cell?.profileImageView.image = UIImage(data: data!)
-            //                })
-            //
-            //            }).resume()
         }
         
         return cell!

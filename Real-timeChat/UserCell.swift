@@ -16,13 +16,14 @@ class UserCell: UITableViewCell {
             setupNameAndProfileImage()
             if self.message?.text != nil {
                 self.detailTextLabel?.text = self.message?.text
+            }else if self.message?.videoURL != nil{
+                self.detailTextLabel?.text = "[Video]"
             }else {
                 self.detailTextLabel?.text = "[Image]"
             }
             
             if let seconds = message?.timestamp?.doubleValue {
                 let timestamp = NSDate(timeIntervalSince1970: seconds)
-                
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "hh:mm:ss a"
                 timeLabel.text = dateFormatter.string(from: timestamp as Date)                }
@@ -30,13 +31,6 @@ class UserCell: UITableViewCell {
     }
     
     private func setupNameAndProfileImage() {
-        //        let chatmateId: String?
-        //        if self.mesage?.fromId == FIRAuth.auth()?.currentUser?.uid {
-        //            chatmateId = self.mesage?.toId
-        //        }else {
-        //            chatmateId = self.mesage?.fromId
-        //        }
-        //        print(self.message)
         if let id = self.message?.chatmateId() {
             let ref = FIRDatabase.database().reference().child("users").child(id)
             ref.observeSingleEvent(of: .value, with: {

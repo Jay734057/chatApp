@@ -32,7 +32,6 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
-        print("cancel")
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
@@ -72,9 +71,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     func handleLoginRegisterChange(){
         let title = loginRegisterSegmentedControl.titleForSegment(at: loginRegisterSegmentedControl.selectedSegmentIndex)
         loginRegisterButton.setTitle(title, for: .normal)
-        //        print(loginRegisterSegmentedControl.selectedSegmentIndex)
         
-        //change height of inputContainerView
         inputContainerViewHeightAnchor?.constant = loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 100 : 150
         //
         nameTextFieldHeightAnchor?.isActive = false
@@ -124,7 +121,6 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     
     func handleLogin(){
         guard let email = emailTextField.text, let password = passwordTextField.text else {
-            print("Form is not valid")
             return
         }
         
@@ -144,7 +140,6 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     func handleRegister(){
         guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text
             else {
-                print("Form is not valid")
                 return
         }
         
@@ -182,13 +177,6 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
                 })
             }
         })
-        
-        //        FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (user, error) in
-        //            if error != nil {
-        //                print(error!)
-        //                return
-        //            }
-        //        })
         
         
     }
