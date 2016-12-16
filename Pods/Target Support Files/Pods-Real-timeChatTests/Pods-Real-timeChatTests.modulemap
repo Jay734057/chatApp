@@ -1,0 +1,6 @@
+framework module Pods_Real_timeChatTests {
+  umbrella header "Pods-Real-timeChatTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

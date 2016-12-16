@@ -1,3 +1,4 @@
+
 //
 //  ChatLogController.swift
 //  Real-timeChat
@@ -42,22 +43,16 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
                 guard let dic = snapshot.value as? [String:AnyObject] else{
                     return
                 }
-                
-                //                let message = Message(dictionary: dic)
-                //                message.setValuesForKeys(dic)
-                
-                //                if message.chatmateId() == self.user?.id{
+    
                 self.messages.append(Message(dictionary: dic))
                 DispatchQueue.main.async(execute: {
                     self.collectionView?.reloadData()
-//                    it will crash!!!i dont know 
+//                    it will crash!!!i dont know
                     if self.messages.count > 0 {
                         let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
                         self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
                     }
                 })
-                //                }
-                
             }, withCancel: nil)
         }, withCancel: nil)
         
@@ -66,9 +61,6 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //        navigationItem.title = "Chat log controller"
-        
-        //        navigationItem.leftBarButtonItem?.title = "back"
         collectionView?.alwaysBounceVertical = true
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
@@ -110,7 +102,7 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
     }
     
     private func uploadForURL(url: URL) {
-        let filename = NSUUID().uuidString +  ".mov"
+        let filename = UUID().uuidString +  ".mov"
         let uploadTask = FIRStorage.storage().reference().child("message_video").child(filename).putFile(url, metadata: nil, completion: { (metadata, error) in
             if error != nil{
                 print(error!)
@@ -123,8 +115,8 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
                     
                     self.uploadImage(image: thumbnailImage, completion: { (imageURL) in
                         //image url???
-                        let properties = ["imageURL": imageURL, "imageWidth": thumbnailImage.size.width, "imageHeight": thumbnailImage.size.height, "videoURL": videoURL] as [String : Any]
-                        self.sendMessageWithProperties(properties: properties as [String : AnyObject])
+                        let properties = ["imageURL": imageURL as AnyObject, "imageWidth": thumbnailImage.size.width as AnyObject, "imageHeight": thumbnailImage.size.height as AnyObject, "videoURL": videoURL as AnyObject] as [String : AnyObject]
+                        self.sendMessageWithProperties(properties: properties)
                         
                     })
 
@@ -132,9 +124,10 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
 
             }
         })
+        
         uploadTask.observe(.progress, handler:{
             (snapshot) in
-            if let completeUnitCount = snapshot.progress?.completedUnitCount {
+            if let completeUnitCount = snapshot.progress?.fractionCompleted {// just try
                 self.navigationItem.title = String(completeUnitCount)
             }
         })
@@ -175,9 +168,7 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
                 self.uploadImageURL(url: imageURL, image: selected)
 
             })
-//            uploadImage(image: selected)
         }
-
     }
     
     
@@ -205,7 +196,7 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
     func handleKeyboardDidShow() {
         if messages.count > 0 {
             let indexPath = NSIndexPath(item: messages.count - 1, section: 0)
-            collectionView?.scrollToItem(at: indexPath as IndexPath, at: .top, animated: true)
+            collectionView?.scrollToItem(at: indexPath as IndexPath, at: .bottom, animated: true)
         }
     }
     
@@ -214,27 +205,27 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
         NotificationCenter.default.removeObserver(self)
     }
     
-    func handleKeyboardWillShow(notification: Notification) {
-        let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
-        
-        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue
-        
-        containerBottomAnchor?.constant = -keyboardFrame!.height
-        
-        UIView.animate(withDuration: keyboardDuration!, animations: {
-            self.view.layoutIfNeeded()
-        })
-    }
+//    func handleKeyboardWillShow(notification: Notification) {
+//        let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+//        
+//        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue
+//        
+//        containerBottomAnchor?.constant = -keyboardFrame!.height
+//        
+//        UIView.animate(withDuration: keyboardDuration!, animations: {
+//            self.view.layoutIfNeeded()
+//        })
+//    }
     
-    func handleKeyboardWillHide(notfication: Notification) {
-        let keyboardDuration = (notfication.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue
-        
-        containerBottomAnchor?.constant = 0
-        
-        UIView.animate(withDuration: keyboardDuration!, animations: {
-            self.view.layoutIfNeeded()
-        })
-    }
+//    func handleKeyboardWillHide(notfication: Notification) {
+//        let keyboardDuration = (notfication.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue
+//        
+//        containerBottomAnchor?.constant = 0
+//        
+//        UIView.animate(withDuration: keyboardDuration!, animations: {
+//            self.view.layoutIfNeeded()
+//        })
+//    }
     
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -254,12 +245,12 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
        
         cell.textView.text = message.text
         
-        setupCell(cell: cell, message: message)
+        setupCell(cell, message: message)
         
         
         //modify the width of bubbleView
         if let text = message.text {
-            cell.bubbleWidthAnchor?.constant = estimatedFrameForText(text: text).width + 32
+            cell.bubbleWidthAnchor?.constant = estimatedFrameForText(text).width + 28
             cell.textView.isHidden = false
         }else if message.imageURL != nil {
             cell.bubbleWidthAnchor?.constant = 200
@@ -275,10 +266,10 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
         return cell
     }
     
-    private func setupCell(cell: ChatMessageCell, message: Message) {
+    private func setupCell( _ cell: ChatMessageCell, message: Message) {
         
         if let url = self.user?.profileImageURL {
-            cell.profileImageView.loadImageUsingCacheWithURLString(urlString: url)
+            cell.profileImageView.loadImageUsingCacheWithURLString(url)
         }
         
         if message.fromId == FIRAuth.auth()?.currentUser?.uid {
@@ -298,7 +289,7 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
         }
         
         if let url = message.imageURL {
-            cell.messageImageView.loadImageUsingCacheWithURLString(urlString: url)
+            cell.messageImageView.loadImageUsingCacheWithURLString(url)
             cell.messageImageView.isHidden = false
             cell.bubbleView.backgroundColor = UIColor.clear
         } else {
@@ -312,7 +303,7 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
         
         let message = messages[indexPath.item]
         if let text = message.text {
-            height = estimatedFrameForText(text: text).height + 20
+            height = estimatedFrameForText(text).height + 20
         }else if let imageWidth = message.imageWidth?.floatValue, let imageHeight = message.imageHeight?.floatValue{
             //h1/w1 = h2/w2, h1 = h2 / w2 * w1
             height = CGFloat(imageHeight / imageWidth * 200)
@@ -322,7 +313,7 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
         return CGSize(width: width, height: height)
     }
     
-    private func estimatedFrameForText(text: String) -> CGRect{
+    private func estimatedFrameForText(_ text: String) -> CGRect{
         let size = CGSize(width: 200, height: 1000)
         let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
         
@@ -340,7 +331,7 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
     }
     
     private func uploadImage(image: UIImage, completion: @escaping (_ imageURL: String) -> ()) {
-        let imageName = NSUUID().uuidString
+        let imageName = UUID().uuidString
         
         let ref = FIRStorage.storage().reference().child("message_image").child(imageName)
         
@@ -370,7 +361,7 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
         let childRef = ref.childByAutoId()
         let toId = user!.id!
         let fromId = FIRAuth.auth()!.currentUser!.uid
-        let timestamp = Int(NSDate().timeIntervalSince1970)
+        let timestamp = NSNumber(value: Int(Date().timeIntervalSince1970))
         
         var values = ["toId": toId, "fromId": fromId, "timestamp": timestamp] as [String : Any]
         
@@ -386,9 +377,11 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
             let id = childRef.key
             
             let userMessagesRef = FIRDatabase.database().reference().child("user-messages").child(fromId).child(toId)
+            
             userMessagesRef.updateChildValues([id: 1])
             
             let recipientUserMessagesRef = FIRDatabase.database().reference().child("user-messages").child(toId).child(fromId)
+            
             recipientUserMessagesRef.updateChildValues([id: 1])
         }
         
@@ -424,23 +417,24 @@ class ChatLogController: UICollectionViewController,UITextFieldDelegate,UICollec
             
             keyWindow.addSubview(zoomingImageView)
             
-            let heigth = iv.frame.height / iv.frame.width * keyWindow.frame.width
-            
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: { 
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
                 self.fakeBackgroundView?.alpha = 1
                 self.inputContainerView.alpha = 0
+                
+                let heigth = iv.frame.height / iv.frame.width * keyWindow.frame.width
                 
                 zoomingImageView.frame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: heigth)
                 
                 zoomingImageView.center = keyWindow.center
-            }, completion: nil)
-            
+            }, completion: {(completed) in
+            })
         }
     }
     
     func performZoomOut(gesture: UITapGestureRecognizer) {
         if let zoomOutImageView = gesture.view {
             zoomOutImageView.clipsToBounds = true
+            
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: { 
                 zoomOutImageView.frame = self.startingFrame!
                 zoomOutImageView.layer.cornerRadius = 12

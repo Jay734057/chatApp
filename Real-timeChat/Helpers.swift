@@ -17,7 +17,7 @@ extension UIColor{
 let imageCache = NSCache<NSString, UIImage>()
 
 extension UIImageView {
-    func loadImageUsingCacheWithURLString(urlString: String){
+    func loadImageUsingCacheWithURLString(_ urlString: String){
         self.image = nil
         //check if the image is cached
         if let cachedImage = imageCache.object(forKey: urlString as NSString) {

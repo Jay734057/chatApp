@@ -38,8 +38,8 @@ class UserCell: UITableViewCell {
                 if let dic = snapshot.value as? [String: AnyObject]{
                     self.textLabel?.text = dic["name"] as? String
                     
-                    if let profileImageURL = dic["profileImageURL"]{
-                        self.profileImageView.loadImageUsingCacheWithURLString(urlString: profileImageURL as! String)
+                    if let profileImageURL = dic["profileImageURL"] as? String{
+                        self.profileImageView.loadImageUsingCacheWithURLString(profileImageURL)
                     }
                 }
             }, withCancel: nil)

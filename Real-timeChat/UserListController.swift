@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class NewMessageTableViewController: UITableViewController {
+class UserListController: UITableViewController {
     
     let cellId = "userCellId"
     
@@ -37,15 +37,15 @@ class NewMessageTableViewController: UITableViewController {
                     //                    user.name = dic["name"] as! String?
                     //                    user.email = dic["email"] as! String?
                     user.setValuesForKeys(dic)
-                    self.users.append(user)
-                    
+                    if user.id != FIRAuth.auth()?.currentUser?.uid{
+                        self.users.append(user)
+                    }
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
                     }
                     
                 }
-                
-                
+    
         }, withCancel: nil)
     }
     
@@ -68,7 +68,7 @@ class NewMessageTableViewController: UITableViewController {
         cell?.detailTextLabel?.text = user.email
         
         if let profileImageURL = user.profileImageURL {
-            cell?.profileImageView.loadImageUsingCacheWithURLString(urlString: profileImageURL)
+            cell?.profileImageView.loadImageUsingCacheWithURLString(profileImageURL)
         }
         
         return cell!
@@ -79,7 +79,7 @@ class NewMessageTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         dismiss(animated: true, completion: {
             let user = self.users[indexPath.row]
-            self.messageController?.showChatController(user: user)
+            self.messageController?.showChatController(user)
         })
     }
     

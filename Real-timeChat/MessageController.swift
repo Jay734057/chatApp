@@ -24,11 +24,6 @@ class MessageController: UITableViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"new_message_icon") , style: .plain, target: self, action: #selector(handleFetchUserList))
         
-        let gesture = UISwipeGestureRecognizer(target: self, action: #selector(showChatController))
-        gesture.direction = .left
-        
-        self.view.addGestureRecognizer(gesture)
-        
         checkIfLoggedIn()
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
@@ -42,7 +37,6 @@ class MessageController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        //delete messages
         
         guard let uid = FIRAuth.auth()?.currentUser?.uid else {
             return
@@ -76,24 +70,7 @@ class MessageController: UITableViewController {
             FIRDatabase.database().reference().child("user-messages").child(uid).child(userId).observe(.childAdded, with: { (snapshot) in
                 
                 let messageId = snapshot.key
-                
-                let messageReference = FIRDatabase.database().reference().child("messages").child(messageId)
-                
-                messageReference.observeSingleEvent(of: .value, with: { (snapshot) in
-                    
-                    if let dic = snapshot.value as? [String: AnyObject]{
-                        let message = Message(dictionary: dic)
-                        
-                        if let id = message.chatmateId() {
-                            self.messagesDic[id] = message
-                            
-                        }
-                        
-                        self.attemptReloadOfTable()
-                        
-                    }
-                    
-                }, withCancel: nil)
+                self.fetchMessageWithMessageId(messageId)
                 
             }, withCancel: nil)
             
@@ -103,6 +80,27 @@ class MessageController: UITableViewController {
             self.messagesDic.removeValue(forKey: snapshot.key)
             self.attemptReloadOfTable()
         }, withCancel: nil)
+    }
+    
+    func fetchMessageWithMessageId(_ messageId: String) {
+        let messageReference = FIRDatabase.database().reference().child("messages").child(messageId)
+        
+        messageReference.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            if let dic = snapshot.value as? [String: AnyObject]{
+                let message = Message(dictionary: dic)
+                
+                if let id = message.chatmateId() {
+                    self.messagesDic[id] = message
+                    
+                }
+                
+                self.attemptReloadOfTable()
+                
+            }
+            
+        }, withCancel: nil)
+
     }
     
     var timer: Timer?
@@ -158,15 +156,15 @@ class MessageController: UITableViewController {
             let user = User()
             user.id = chatmateId
             user.setValuesForKeys(dic)
-            self.showChatController(user: user)
+            self.showChatController(user)
         }, withCancel: nil)
         
     }
     
     func handleFetchUserList() {
-        let newMessageController = NewMessageTableViewController()
-        newMessageController.messageController = self
-        let navController = UINavigationController(rootViewController: newMessageController)
+        let userListController = UserListController()
+        userListController.messageController = self
+        let navController = UINavigationController(rootViewController: userListController)
         present(navController, animated: true, completion: nil)
     }
     
@@ -210,7 +208,7 @@ class MessageController: UITableViewController {
         present(loginController, animated: true, completion: nil)
     }
     
-    func showChatController(user: User) {
+    func showChatController(_ user: User) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLogController.user = user
         navigationController?.pushViewController(chatLogController, animated: true)

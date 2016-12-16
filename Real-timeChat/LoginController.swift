@@ -244,6 +244,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         
         view.backgroundColor = UIColor.rgb(red: 61, green: 91, blue: 151)
         
+//        view.backgroundColor = UIColor.rgb(red: 245, green: 246, blue: 235)
         view.addSubview(inputsContainerView)
         view.addSubview(loginRegisterButton)
         view.addSubview(profileImageView)
